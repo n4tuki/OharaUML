@@ -1,0 +1,12 @@
+@startuml .
+left to right direction
+actor "ユーザー" as P
+rectangle robodog {
+  usecase "名前を変更する" as rename
+  usecase "時刻に応じた挨拶をする" as hello
+  usecase "足し算をする" as sum
+}
+P --> rename
+P --> hello
+P --> sum
+@enduml
