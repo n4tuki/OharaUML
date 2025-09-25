@@ -4,6 +4,8 @@ from urllib.parse import parse_qs
 
 
 def add_numbers(environ):
+    first_value = 0
+    second_value = 0
     method = environ["REQUEST_METHOD"]
     if method == "POST":
         data = parse_post(environ)
@@ -15,7 +17,5 @@ def add_numbers(environ):
     addition = getAddition()
 
     return render_template("boundaries/add_numbers_data.html",
-        first_value=first_value,
-        second_value=second_value,
         addition=addition
     )

@@ -5,19 +5,13 @@
 </head>
 <body>
   <h1>足し算をする</h1>
+  <form method="POST">
+        <label>足し算をする:</label>
+        <input type="number" name="first_value" value=0>
+        <input type="number" name="second_value" value=0>
+        <input type="submit" value="保存">
+    </form>
 
-  <!-- 入力フォーム -->
-  <form method="get" action="/calc">
-    <label for="first">1つ目の数字：</label>
-    <input type="number" id="first" name="first" required>
-    <br><br>
-    <label for="second">2つ目の数字：</label>
-    <input type="number" id="second" name="second" required>
-    <br><br>
-    <button type="submit">計算する</button>
-  </form>
-
-  <!-- 足し算の結果表示（コントローラから渡された値） -->
     <p>結果：{addition}</p>
 
   <p><a href="/">メインメニューに戻る</a></p>
