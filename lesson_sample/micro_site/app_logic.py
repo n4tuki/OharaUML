@@ -63,11 +63,9 @@ def setSecondValue(value: int) -> None:
 
 def getAddition() -> int:
     """2つの値の合計を返す"""
-    try:
-        with open(ROBODOG_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        first = int(data.get("first_value", 0))
-        second = int(data.get("second_value", 0))
-        return first + second
-    except (json.JSONDecodeError, OSError, ValueError):
-        return 0
+    with open(ROBODOG_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    result = data['first_value'] + data['second_value']
+
+    return result
