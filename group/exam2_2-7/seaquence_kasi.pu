@@ -1,0 +1,69 @@
+@startuml 図書貸出シーケンス図（代替フロー付き）
+hide footbox
+
+actor 事務職員 as staff
+
+boundary メニュー画面 as menu_view
+boundary 図書貸出画面 as lend_view
+boundary 貸出完了画面 as complete_view
+boundary メッセージ表示画面 as error_view
+
+control 貸出処理制御 as lend_ctrl
+
+entity 会員DB as member_DB
+entity 図書DB as book_DB
+entity 貸出DB as lend_DB
+
+staff -> menu_view : 「貸出メニュー」を押下
+menu_view -> lend_ctrl : 貸出画面表示要求
+lend_ctrl -> lend_view : 図書貸出画面を表示
+
+staff -> lend_view : 会員番号を入力
+lend_view -> lend_ctrl : 会員番号送信
+
+opt 会員番号未入力または未登録
+  lend_ctrl -> error_view : 「会員番号を確認してください」表示
+  error_view -> lend_view : 入力欄へ戻す
+end
+
+lend_ctrl -> member_DB : 会員情報検索
+member_DB --> lend_ctrl : 氏名・区分返却
+lend_ctrl -> lend_view : 会員情報表示
+
+staff -> lend_view : 管理番号を入力
+lend_view -> lend_ctrl : 管理番号送信
+
+opt 管理番号未入力または未登録
+  lend_ctrl -> error_view : 「管理番号を確認してください」表示
+  error_view -> lend_view : 入力欄へ戻す
+end
+
+lend_ctrl -> book_DB : 図書情報検索
+book_DB --> lend_ctrl : 書名・種別返却
+
+opt 貸出上限超過または学生に雑誌
+  lend_ctrl -> error_view : 「貸出できません」理由を表示
+  error_view -> lend_view : 入力欄へ戻す
+end
+
+lend_ctrl -> lend_view : 貸出一覧に追加表示
+
+opt 図書キャンセル
+  staff -> lend_view : キャンセルボタン押下
+  lend_view -> lend_ctrl : 図書キャンセル要求
+  lend_ctrl -> lend_view : 貸出一覧から削除
+end
+
+staff -> lend_view : 「貸出」ボタン押下
+lend_view -> lend_ctrl : 貸出確定要求
+
+opt 一冊も確定していない
+  lend_ctrl -> error_view : 「貸し出す書籍を入力してください」表示
+  error_view -> lend_view : 入力欄へ戻す
+end
+
+lend_ctrl -> lend_DB : 貸出情報保存
+lend_DB --> lend_ctrl : 保存完了
+lend_ctrl -> complete_view : 貸出完了画面を表示
+
+@enduml

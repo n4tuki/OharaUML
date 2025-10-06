@@ -1,0 +1,70 @@
+@startuml 履歴閲覧
+hide footbox
+
+actor 事務職員 as staff
+
+boundary メニュー画面 as menu_view
+boundary 履歴検索画面 as search_view
+boundary 図書一覧画面 as booklist_view
+boundary 履歴一覧画面 as history_view
+boundary メッセージ表示画面 as error_view
+
+control 履歴閲覧制御 as history_ctrl
+
+entity 図書 as book
+entity 履歴 as history
+
+staff -> menu_view : 「貸出履歴メニュー」を押下
+activate menu_view
+menu_view -> history_ctrl : 履歴検索画面表示要求
+activate history_ctrl
+history_ctrl -> search_view : 履歴検索画面を表示
+activate search_view
+deactivate menu_view
+
+staff -> search_view : 書名を入力
+staff -> search_view : 検索ボタン押下
+search_view -> history_ctrl : 検索要求
+history_ctrl -> book : 書名で部分一致検索
+activate book
+
+opt 該当図書なし
+  book -> history_ctrl : 該当なし
+  history_ctrl -> error_view : 「該当する図書がありません」表示
+  activate error_view
+  error_view -> search_view : 検索画面に戻す
+  deactivate error_view
+  deactivate book
+  deactivate history_ctrl
+end
+
+book -> history_ctrl : 図書一覧返却
+deactivate book
+history_ctrl -> booklist_view : 図書一覧表示
+activate booklist_view
+
+staff -> booklist_view : 管理番号を選択
+booklist_view -> history_ctrl : 履歴表示要求
+deactivate booklist_view
+
+history_ctrl -> history : 管理番号で履歴検索
+activate history
+
+opt 履歴なし
+  history -> history_ctrl : 件数0
+  history_ctrl -> error_view : 「貸出履歴がありません」表示
+  activate error_view
+  error_view -> search_view : 検索画面に戻す
+  deactivate error_view
+  deactivate history
+  deactivate history_ctrl
+end
+
+history -> history_ctrl : 履歴一覧返却
+deactivate history
+history_ctrl -> history_view : 履歴一覧表示
+activate history_view
+deactivate history_view
+deactivate history_ctrl
+
+@enduml

@@ -1,0 +1,68 @@
+@startuml 図書返却シーケンス図
+hide footbox
+
+actor 事務職員 as staff
+
+boundary メニュー画面 as menu_view
+boundary 返却一覧画面 as return_view
+boundary 返却完了画面 as complete_view
+boundary メッセージ表示画面 as error_view
+
+control 返却処理制御 as return_ctrl
+
+entity 図書DB as book_DB
+entity 貸出DB as lend_DB
+entity 予約DB as reserve_DB
+
+staff -> menu_view : 「返却メニュー」を押下
+menu_view -> return_ctrl : 返却画面表示要求
+return_ctrl -> return_view : 返却一覧画面を表示
+
+staff -> return_view : 管理番号を入力
+return_view -> return_ctrl : 管理番号送信
+return_ctrl -> book_DB : 図書情報検索
+
+opt 管理番号未登録
+  return_ctrl -> error_view : 「管理番号を確認してください」表示
+  error_view -> return_view : 入力欄へ戻す
+end
+
+book_DB --> return_ctrl : 図書情報返却
+return_ctrl -> lend_DB : 貸出状態・返却期限確認
+
+opt 返却期限超過
+  lend_DB --> return_ctrl : 期限超過フラグ付き返却
+  return_ctrl -> return_view : 図書情報を赤字で一覧に追加
+  return_ctrl -> error_view : 「返却期限を過ぎています」表示
+end
+
+opt 貸出されていない
+  lend_DB --> return_ctrl : 貸出なし
+  return_ctrl -> error_view : 「この図書は貸し出されていません」表示
+  error_view -> return_view : 入力欄へ戻す
+end
+
+lend_DB --> return_ctrl : 正常な貸出情報
+return_ctrl -> return_view : 図書情報を一覧に追加
+
+staff -> return_view : 「返却」ボタン押下
+return_view -> return_ctrl : 返却確定要求
+
+opt 一冊も入力されていない
+  return_ctrl -> error_view : 「返却する図書が入力されていません」表示
+  error_view -> return_view : 入力欄へ戻す
+end
+
+return_ctrl -> lend_DB : 貸出情報更新（返却処理）
+
+opt 図書が予約されている
+  return_ctrl -> reserve_DB : 予約情報取得
+  reserve_DB --> return_ctrl : 最古の予約者返却
+  return_ctrl -> error_view : 「予約者に通知しました」表示
+  return_ctrl -> return_view : 図書情報を青字で一覧に追加
+end
+
+lend_DB --> return_ctrl : 更新完了
+return_ctrl -> complete_view : 返却完了画面を表示
+
+@enduml

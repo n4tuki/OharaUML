@@ -1,0 +1,65 @@
+@startuml 図書館システム_クラス定義のみ
+skinparam classAttributeIconSize 0
+
+class 会員 {
+  -会員ID : String
+  -氏名 : String
+  -メールアドレス : String
+  -区分 : 会員区分
+  +雑誌貸出可能か() : boolean
+  +貸出上限冊数() : int
+}
+
+class 図書 {
+  -管理番号 : String
+  -書名 : String
+  -種別 : 図書種別
+  +雑誌かどうか() : boolean
+}
+
+class 貸出 {
+  -貸出ID : String
+  -貸出日 : Date
+  -返却期限 : Date
+  -返却日 : Date
+  +延滞かどうか() : boolean
+  +返却処理()
+}
+
+class 予約 {
+  -予約ID : String
+  -予約日 : Date
+  -通知済み : boolean
+  +利用者へ通知()
+}
+
+class 履歴 {
+  -履歴ID : String
+  -処理日 : Date
+  -処理種別 : 履歴種別
+  +履歴記録()
+}
+
+class 職員 {
+  -職員ID : String
+  -氏名 : String
+  -メールアドレス : String
+  +予約通知処理()
+}
+
+class 会員区分 {
+  +学生 : String
+  +教職員 : String
+}
+
+class 図書種別 {
+  +書籍 : String
+  +雑誌 : String
+}
+
+class 履歴種別 {
+  +貸出 : String
+  +返却 : String
+}
+
+@enduml

@@ -1,0 +1,128 @@
+@startuml
+left to right direction
+ 
+actor "スーパーユーザー" as super
+actor "配送管理者" as deli
+actor "商品管理者" as prod
+actor "ユーザー管理者" as admin
+actor "ユーザー" as user
+ 
+rectangle "ユーザー機能" {
+    usecase "アカウント新規登録" as u_add_account
+    usecase "アカウント削除" as u_del_account
+    usecase "アカウント情報更新" as u_update_info
+    usecase "ログイン" as u_login
+    usecase "ログアウト" as u_logout
+    usecase "商品一覧表示" as u_view
+    usecase "商品詳細表示" as u_view_detail
+    usecase "商品注文" as u_buy
+    usecase "支払い" as u_pay
+    usecase "支払い確認" as u_view_pay
+    usecase "クレジットカード新規登録" as u_add_card
+    usecase "クレジットカード情報更新" as u_update_card
+    usecase "クレジットカード情報削除" as u_del_card
+    usecase "配送状況確認" as u_view_deli
+    usecase "返品申請" as u_coolingoff
+    usecase "お問い合わせ送信" as u_send_mail
+    usecase "カートに追加" as u_add_cart
+    usecase "カートから削除" as u_del_cart
+ 
+    user --> u_add_account
+    user --> u_del_account
+    user --> u_update_info
+    user --> u_login
+    user --> u_logout
+    user --> u_view
+    user --> u_view_detail
+    user --> u_buy
+    user --> u_pay
+    user --> u_view_pay
+    user --> u_add_card
+    user --> u_update_card
+    user --> u_del_card
+    user --> u_view_deli
+    user --> u_coolingoff
+    user --> u_send_mail
+    user --> u_add_cart
+    user --> u_del_cart
+}
+package 管理システム{
+rectangle "ユーザー管理機能" {
+    usecase "ログイン" as a_login
+    usecase "ログアウト" as a_logout
+    usecase "ユーザー追加" as a_add_user
+    usecase "ユーザー停止" as a_del_user
+    usecase "注文一覧" as a_disp_order
+    usecase "注文停止" as a_del_order
+    usecase "返品一覧表示" as a_cooling
+    usecase "返品/送金処理" as a_deal_cooling
+    usecase "お問い合わせ一覧" as a_disp_mail
+ 
+    admin --> a_login
+    admin --> a_logout
+    admin --> a_add_user
+    admin --> a_del_user
+    admin --> a_disp_order
+    admin --> a_del_order
+    admin --> a_cooling
+    admin --> a_deal_cooling
+    admin --> a_disp_mail
+}
+ 
+rectangle "商品管理機能"{
+    usecase "ログイン" as p_login
+    usecase "ログアウト" as p_logout
+    usecase "商品追加" as p_add
+    usecase "商品削除" as p_del
+    usecase "商品情報変更" as p_info
+    usecase "商品在庫更新" as p_zaiko
+ 
+    prod --> p_login
+    prod --> p_logout
+    prod --> p_add
+    prod --> p_del
+    prod --> p_info
+    prod --> p_zaiko
+ 
+}
+ 
+ 
+rectangle "配送管理機能" {
+    usecase "ログイン" as d_login
+    usecase "ログアウト" as d_logout
+    usecase "出荷処理" as d_donadona
+    usecase "配送状況確認" as d_view
+    usecase "注文一覧" as d_order
+    usecase "注文停止" as d_del
+ 
+    deli --> d_login
+    deli --> d_logout
+    deli --> d_donadona
+    deli --> d_view
+    deli --> d_order
+    deli --> d_del
+   
+}
+ 
+ 
+ 
+rectangle "スーパーユーザー機能" {
+    usecase "ログイン" as s_login
+    usecase "ログアウト" as s_logout
+    usecase "スーパーユーザー情報変更" as s_info
+    usecase "管理アカウント作成" as s_add_ac
+    usecase "管理アカウント削除" as s_del_ac
+    usecase "管理アカウント情報編集" as s_change
+    usecase "管理アカウントログ閲覧" as s_view_log
+ 
+    super --> s_login
+    super --> s_logout
+    super --> s_info
+    super --> s_add_ac
+    super --> s_del_ac
+    super --> s_change
+    super --> s_view_log
+}
+}
+@enduml
+ 

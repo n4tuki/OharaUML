@@ -1,0 +1,87 @@
+@startuml 注文する
+hide footbox
+
+actor ユーザー as user
+boundary カート画面 as cart_view
+boundary 注文情報入力画面 as input_view
+boundary 注文内容確認画面 as confirm_view
+boundary 注文完了画面 as complete_view
+boundary エラー通知画面 as error_view
+
+control 注文処理 as order_ctrl
+control 在庫確認 as stock_ctrl
+control 支払い処理 as payment_ctrl
+
+entity ユーザーDB as user_DB
+entity 商品DB as prod_DB
+entity 注文DB as order_DB
+entity カートDB as cart_DB
+
+user -> cart_view :「注文手続きへ」をクリック
+activate cart_view
+cart_view -> order_ctrl : 注文開始リクエスト()
+activate order_ctrl
+
+order_ctrl -> input_view : 注文情報入力画面を表示
+activate input_view
+user -> input_view : 情報入力（送付先・配送・支払い）
+input_view -> order_ctrl : 入力情報送信
+deactivate input_view
+
+order_ctrl -> confirm_view : 注文内容確認画面を表示
+activate confirm_view
+user -> confirm_view :「注文確定」ボタンを押下
+confirm_view -> order_ctrl : 注文確定リクエスト
+deactivate confirm_view
+
+order_ctrl -> order_DB : 注文情報を登録
+activate order_DB
+order_DB -> order_ctrl
+deactivate order_DB
+
+order_ctrl -> stock_ctrl : 在庫確認リクエスト
+activate stock_ctrl
+stock_ctrl -> prod_DB : 商品在庫を最終確認
+activate prod_DB
+
+opt 在庫切れ
+    prod_DB -> stock_ctrl
+    deactivate prod_DB
+    stock_ctrl -> error_view : 在庫不足メッセージ表示
+    activate error_view
+    error_view -> cart_view : カート画面に戻す
+    deactivate error_view
+    deactivate stock_ctrl
+    deactivate order_ctrl
+end
+
+prod_DB -> stock_ctrl
+deactivate prod_DB
+stock_ctrl -> order_ctrl
+deactivate stock_ctrl
+
+order_ctrl -> payment_ctrl : 支払い処理開始
+activate payment_ctrl
+
+opt 決済エラー
+    payment_ctrl -> error_view : 決済エラーメッセージ表示
+    activate error_view
+    error_view -> input_view : 支払い方法再選択へ
+    deactivate error_view
+    deactivate payment_ctrl
+    deactivate order_ctrl
+end
+
+deactivate payment_ctrl
+
+order_ctrl -> cart_DB : カート情報をクリア
+activate cart_DB
+cart_DB -> order_ctrl
+deactivate cart_DB
+
+order_ctrl -> complete_view : 注文完了画面を表示
+activate complete_view
+deactivate complete_view
+deactivate order_ctrl
+
+@enduml

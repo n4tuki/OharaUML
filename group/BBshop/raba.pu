@@ -1,0 +1,13 @@
+@startuml
+class 注文 {
+    -注文ID: int
+    -日付: Date
+}
+
+class 注文明細 {
+    -商品名: string
+    -数量: int
+}
+
+注文 "1" *-- "0..*" 注文明細 : has-a
+@enduml

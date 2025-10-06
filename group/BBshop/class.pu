@@ -1,0 +1,173 @@
+@startuml ClassDiagram_HasA_English
+skinparam classAttributeIconSize 0
+
+package "Customer System" {
+
+  class Customer {
+    -customerID : String
+    -name : String
+    -email : String
+    -address : String
+    -creditCardInfo : String
+    +register()
+    +updateInfo()
+    +getOrderHistory()
+  }
+
+  class Account {
+    -username : String
+    -passwordHash : String
+    -lastLogin : DateTime
+    -isActive : boolean
+    +login()
+    +changePassword()
+    +checkStatus()
+  }
+
+  class Session {
+    -sessionID : String
+    -startTime : DateTime
+    -expiration : DateTime
+    -status : SessionStatus
+    +startSession()
+    +extendExpiration()
+    +getStatus()
+  }
+
+  class Product {
+    -productID : String
+    -productName : String
+    -description : String
+    -price : int
+    -stockQuantity : int
+    +checkStock()
+    +changePrice()
+    +getProductInfo()
+  }
+
+  class Order {
+    -orderID : String
+    -orderDate : Date
+    -status : OrderStatus
+    -totalAmount : int
+    +confirmOrder()
+    +updateStatus()
+    +calculateTotal()
+  }
+
+  class OrderItem {
+    -quantity : int
+    -subtotal : int
+    +calculateSubtotal()
+    +setProduct()
+  }
+
+  class PaymentLog {
+    -paymentID : String
+    -paymentDate : Date
+    -amount : int
+    -method : PaymentMethod
+    -isRefunded : boolean
+    +pay()
+    +refund()
+    +checkPaymentStatus()
+  }
+
+  class Shipment {
+    -shipmentID : String
+    -shipmentDate : Date
+    -trackingNumber : String
+    -status : ShipmentStatus
+    +ship()
+    +updateStatus()
+    +getTrackingInfo()
+  }
+
+  class Return {
+    -returnID : String
+    -requestDate : Date
+    -reason : String
+    -isApproved : boolean
+    +requestReturn()
+    +approveReturn()
+    +checkStatus()
+  }
+
+  Customer "1" o-- "1" Account
+  Account "1" o-- "0..1" Session
+  Customer "1" o-- "0..*" Order
+  Order "1" o-- "1..*" OrderItem
+  OrderItem "1" o-- "1" Product
+  Order "1" o-- "1" PaymentLog
+  Order "1" o-- "1" Shipment
+  Order "0..1" o-- "0..1" Return
+}
+
+package "Admin System" {
+
+  class Admin {
+    -adminID : String
+    -name : String
+    -email : String
+    -permissionLevel : PermissionType
+    +login()
+    +manageProducts()
+    +processOrders()
+    +handleCustomerSupport()
+  }
+
+  class AdminAccount {
+    -username : String
+    -passwordHash : String
+    -lastLogin : DateTime
+    -isActive : boolean
+    +login()
+    +checkStatus()
+  }
+
+  class ProductManagement {
+    -productID : String
+    -operationType : ProductOperationType
+    -operationDate : DateTime
+    -operatorID : String
+    +addProduct()
+    +adjustStock()
+    +recordHistory()
+  }
+
+  class OrderManagement {
+    -orderID : String
+    -adminID : String
+    -processDate : DateTime
+    -processDetails : String
+    +reviewOrder()
+    +recordProcessDetails()
+  }
+
+  class ReturnProcessing {
+    -returnID : String
+    -processDate : Date
+    -processorID : String
+    -result : String
+    +approveReturn()
+    +recordResult()
+  }
+
+  class CustomerSupportLog {
+    -supportID : String
+    -customerID : String
+    -adminID : String
+    -supportDate : DateTime
+    -details : String
+    +recordSupport()
+    +getSupportHistory()
+  }
+
+  Admin "1" o-- "1" AdminAccount
+  Admin "1" o-- "0..*" ProductManagement
+  Admin "1" o-- "0..*" OrderManagement
+  Admin "1" o-- "0..*" ReturnProcessing
+  Admin "1" o-- "0..*" CustomerSupportLog
+}
+
+@enduml
