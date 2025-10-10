@@ -1,0 +1,56 @@
+@startuml
+class ユーザー {
+  +ユーザーID: int
+  +ユーザー名: string
+  +メールアドレス: string
+  +パスワードハッシュ: string
+  +権限: string  ' "管理者" または "利用者"
+  +登録日時: datetime
+}
+
+class ユーザー登録 {
+  +登録ID: int
+  +ユーザー名: string
+  +メールアドレス: string
+  +パスワード: string
+  +登録日時: datetime
+}
+
+class 認証セッション {
+  +セッションID: int
+  +ユーザーID: int
+  +ログイン日時: datetime
+  +ログアウト日時: datetime
+  +セッショントークン: string
+}
+
+class 攻略投稿 {
+  +投稿ID: int
+  +タイトル: string
+  +本文: string
+  +ゲーム名: string
+  +タグ一覧: List<string>
+  +投稿者ID: int
+  +投稿日時: datetime
+  +更新日時: datetime
+}
+
+class ゲーム {
+  +ゲームID: int
+  +ゲーム名: string
+  +ジャンル: string
+}
+
+class タグ {
+  +タグID: int
+  +タグ名: string
+}
+
+class 投稿検索 {
+  +検索ID: int
+  +キーワード: string
+  +ゲーム名: string
+  +タグ名: string
+  +検索日時: datetime
+}
+@enduml
